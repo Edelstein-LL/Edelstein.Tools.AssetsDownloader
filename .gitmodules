@@ -1,0 +1,12 @@
+[submodule "src/Edelstein.Assets.Management"]
+	path = src/Edelstein.Assets.Management
+	url = ../../Edelstein-LL/Edelstein.Assets.Management
+[submodule "src/Edelstein.Data"]
+	path = src/Edelstein.Data
+	url = ../../Edelstein-LL/Edelstein.Data
+[submodule "src/Edelstein.Security"]
+	path = src/Edelstein.Security
+	url = ../../Edelstein-LL/Edelstein.Security
+[submodule "src/Edelstein.Data.Msts"]
+	path = src/Edelstein.Data.Msts
+	url = ../../Edelstein-LL/Edelstein.Data.Msts

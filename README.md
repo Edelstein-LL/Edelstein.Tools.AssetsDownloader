@@ -1,0 +1,3 @@
+# Edelstein.Tools.AssetsDownloader
+
+TBD

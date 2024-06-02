@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edelstein.Tools.AssetsDownloader", "src\Edelstein.Tools.AssetsDownloader\Edelstein.Tools.AssetsDownloader.csproj", "{BA276095-99F9-47D1-80F5-37EA67C0A012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edelstein.Assets.Management", "src\Edelstein.Assets.Management\Edelstein.Assets.Management.csproj", "{6832D78C-217A-4899-A763-E9A975E9D1BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edelstein.Security", "src\Edelstein.Security\Edelstein.Security.csproj", "{58F00FE6-0FA0-4E4D-82D8-5585E98E6895}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edelstein.Data", "src\Edelstein.Data\Edelstein.Data.csproj", "{C806FC25-9226-441A-AED6-F5AFF6B6FD3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edelstein.Data.Msts", "src\Edelstein.Data.Msts\Edelstein.Data.Msts.csproj", "{519EBA05-8095-410F-9F3D-BFA657C5E538}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA276095-99F9-47D1-80F5-37EA67C0A012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA276095-99F9-47D1-80F5-37EA67C0A012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA276095-99F9-47D1-80F5-37EA67C0A012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA276095-99F9-47D1-80F5-37EA67C0A012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6832D78C-217A-4899-A763-E9A975E9D1BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6832D78C-217A-4899-A763-E9A975E9D1BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6832D78C-217A-4899-A763-E9A975E9D1BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6832D78C-217A-4899-A763-E9A975E9D1BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F00FE6-0FA0-4E4D-82D8-5585E98E6895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F00FE6-0FA0-4E4D-82D8-5585E98E6895}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F00FE6-0FA0-4E4D-82D8-5585E98E6895}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F00FE6-0FA0-4E4D-82D8-5585E98E6895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C806FC25-9226-441A-AED6-F5AFF6B6FD3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C806FC25-9226-441A-AED6-F5AFF6B6FD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C806FC25-9226-441A-AED6-F5AFF6B6FD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C806FC25-9226-441A-AED6-F5AFF6B6FD3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519EBA05-8095-410F-9F3D-BFA657C5E538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519EBA05-8095-410F-9F3D-BFA657C5E538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519EBA05-8095-410F-9F3D-BFA657C5E538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519EBA05-8095-410F-9F3D-BFA657C5E538}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

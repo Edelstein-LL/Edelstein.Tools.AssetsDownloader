@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+        <RootNamespace>Edelstein.Tools.AssetsDownloader</RootNamespace>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <GarbageCollectionAdaptationMode>1</GarbageCollectionAdaptationMode>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Edelstein.Assets.Management\Edelstein.Assets.Management.csproj" />
+        <ProjectReference Include="..\Edelstein.Data\Edelstein.Data.csproj" />
+        <ProjectReference Include="..\Edelstein.Security\Edelstein.Security.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AssetsTools.NET" Version="3.0.0"/>
+        <PackageReference Include="Spectre.Console" Version="0.47.0"/>
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
+    </ItemGroup>
+
+</Project>
