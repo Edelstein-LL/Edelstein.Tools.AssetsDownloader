@@ -286,6 +286,7 @@ public class GlobalAssetDownloder
         AnsiConsole.WriteLine("Downloading...");
 
         await AnsiConsole.Progress()
+            .AutoClear(true)
             .HideCompleted(true)
             .StartAsync(async context =>
             {
