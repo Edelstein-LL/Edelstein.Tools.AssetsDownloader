@@ -12,14 +12,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Edelstein.Assets.Management\Edelstein.Assets.Management.csproj" />
-        <ProjectReference Include="..\Edelstein.Data\Edelstein.Data.csproj" />
-        <ProjectReference Include="..\Edelstein.Security\Edelstein.Security.csproj" />
+        <ProjectReference Include="..\Edelstein.Assets.Management\Edelstein.Assets.Management.csproj"/>
+        <ProjectReference Include="..\Edelstein.Data\Edelstein.Data.csproj"/>
+        <ProjectReference Include="..\Edelstein.Security\Edelstein.Security.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AssetsTools.NET" Version="3.0.0"/>
-        <PackageReference Include="Spectre.Console" Version="0.47.0"/>
+        <PackageReference Include="Spectre.Console" Version="0.49.1"/>
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
     </ItemGroup>
 
