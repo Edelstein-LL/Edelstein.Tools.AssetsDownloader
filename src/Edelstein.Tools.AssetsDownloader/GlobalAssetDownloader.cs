@@ -19,7 +19,7 @@ namespace Edelstein.Tools.AssetDownloader;
 public class GlobalAssetDownloder
 {
     private readonly HttpClient _httpClient = new();
-    private readonly CliOptions _options;
+    private readonly CliDownloadOptions _downloadOptions;
 
     private const string DefaultAssetsHost = "img-sif2.lovelive-sif2.com";
     private const string DefaultApiHost = "api-sif2.lovelive-sif2.com";
@@ -27,11 +27,11 @@ public class GlobalAssetDownloder
     private readonly string _assetsBaseUrl;
     private readonly string _apiBaseUrl;
 
-    public GlobalAssetDownloder(CliOptions options)
+    public GlobalAssetDownloder(CliDownloadOptions downloadOptions)
     {
-        _options = options;
+        _downloadOptions = downloadOptions;
 
-        if (_options.Http)
+        if (_downloadOptions.Http)
         {
             _assetsBaseUrl = "http://";
             _apiBaseUrl = "http://";
@@ -42,15 +42,15 @@ public class GlobalAssetDownloder
             _apiBaseUrl = "https://";
         }
 
-        if (_options.AssetsHost is null)
+        if (_downloadOptions.AssetsHost is null)
             _assetsBaseUrl += DefaultAssetsHost;
         else
-            _assetsBaseUrl += _options.AssetsHost;
+            _assetsBaseUrl += _downloadOptions.AssetsHost;
 
-        if (_options.ApiHost is null)
+        if (_downloadOptions.ApiHost is null)
             _apiBaseUrl += DefaultApiHost;
         else
-            _apiBaseUrl += _options.ApiHost;
+            _apiBaseUrl += _downloadOptions.ApiHost;
     }
 
     public async Task DonwloadAssetsAsync()
@@ -60,12 +60,12 @@ public class GlobalAssetDownloder
         string? androidManifestHash = null,
                 iosManifestHash = null;
 
-        if (!_options.NoAndroid)
+        if (!_downloadOptions.NoAndroid)
             androidManifestHash = await RetrieveManifestHashAsync(AssetPlatform.Android);
-        if (!_options.NoIos)
+        if (!_downloadOptions.NoIos)
             iosManifestHash = await RetrieveManifestHashAsync(AssetPlatform.Ios);
 
-        await using (StreamWriter sw = new(Path.Combine(_options.ExtractedManifestsPath, "hashes.txt"),
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, "hashes.txt"),
             new FileStreamOptions
             {
                 Mode = FileMode.Create,
@@ -73,31 +73,31 @@ public class GlobalAssetDownloder
                 Share = FileShare.Read
             }))
         {
-            if (!_options.NoAndroid)
+            if (!_downloadOptions.NoAndroid)
             {
                 AnsiConsole.MarkupLine($"Android manifest hash is [green]{androidManifestHash}[/]");
                 await sw.WriteLineAsync($"Android manifest hash is {androidManifestHash}");
             }
 
-            if (!_options.NoIos)
+            if (!_downloadOptions.NoIos)
             {
                 AnsiConsole.MarkupLine($"iOS manifest hash is [green]{iosManifestHash}[/]");
                 await sw.WriteLineAsync($"iOS manifest hash is {iosManifestHash}");
             }
         }
 
-        foreach (string language in _options.Languages)
+        foreach (string language in _downloadOptions.Languages)
         {
-            Directory.CreateDirectory(Path.Combine(_options.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Android),
+            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Android),
                 language));
-            Directory.CreateDirectory(Path.Combine(_options.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Ios),
+            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Ios),
                 language));
 
             AnsiConsole.WriteLine($"Processing language: {language}");
 
             AnsiConsole.WriteLine("Downloading manifest...");
 
-            if (!_options.NoAndroid)
+            if (!_downloadOptions.NoAndroid)
             {
                 await DownloadManifestAsync(AssetPlatform.Android, language, androidManifestHash!);
 
@@ -106,7 +106,7 @@ public class GlobalAssetDownloder
                 await UnpackManifestAsync(AssetPlatform.Android, language, androidManifestHash!);
             }
 
-            if (!_options.NoIos)
+            if (!_downloadOptions.NoIos)
             {
                 await DownloadManifestAsync(AssetPlatform.Ios, language, iosManifestHash!);
 
@@ -115,13 +115,13 @@ public class GlobalAssetDownloder
                 await UnpackManifestAsync(AssetPlatform.Ios, language, iosManifestHash!);
             }
 
-            if (!_options.NoAndroid)
+            if (!_downloadOptions.NoAndroid)
             {
                 AnsiConsole.WriteLine("Decrypting and deserializing Android manifests...");
                 (BundleManifest bundles, MovieManifest movies, SoundManifest sounds) =
                     await DeserializeManifestsAsync(AssetPlatform.Android, language);
 
-                if (!_options.NoJsonManifest)
+                if (!_downloadOptions.NoJsonManifest)
                 {
                     AnsiConsole.WriteLine("Serializing Android manifests to JSON...");
                     await SerializeManifestsToJsonAsync(AssetPlatform.Android, language, bundles, movies, sounds);
@@ -131,13 +131,13 @@ public class GlobalAssetDownloder
                 await DownloadAssetsAsync(AssetPlatform.Android, language, bundles, movies, sounds);
             }
 
-            if (!_options.NoIos)
+            if (!_downloadOptions.NoIos)
             {
                 AnsiConsole.WriteLine("Decrypting and deserializing iOS manifests...");
                 (BundleManifest bundles, MovieManifest movies, SoundManifest sounds) =
                     await DeserializeManifestsAsync(AssetPlatform.Ios, language);
 
-                if (!_options.NoJsonManifest)
+                if (!_downloadOptions.NoJsonManifest)
                 {
                     AnsiConsole.WriteLine("Serializing iOS manifests to JSON...");
                     await SerializeManifestsToJsonAsync(AssetPlatform.Ios, language, bundles, movies, sounds);
@@ -183,14 +183,14 @@ public class GlobalAssetDownloder
             new($"{_assetsBaseUrl}/{platformString}/{language}/{manifestHash}/{AssetsConstants.ManifestName}.unity3d");
 
         await using Stream httpStream = await _httpClient.GetStreamAsync(downloadUri);
-        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_options.DownloadPath, downloadUri.AbsolutePath[1..]))!);
-        await using StreamWriter fileWriter = new(Path.Combine(_options.DownloadPath, downloadUri.AbsolutePath[1..]), false);
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, downloadUri.AbsolutePath[1..]))!);
+        await using StreamWriter fileWriter = new(Path.Combine(_downloadOptions.DownloadPath, downloadUri.AbsolutePath[1..]), false);
         await httpStream.CopyToAsync(fileWriter.BaseStream);
     }
 
     private async Task UnpackManifestAsync(AssetPlatform platform, string language, string manifestHash)
     {
-        string manifestBundleFilePath = Path.Combine(_options.DownloadPath, AssetPlatformConverter.ToString(platform),
+        string manifestBundleFilePath = Path.Combine(_downloadOptions.DownloadPath, AssetPlatformConverter.ToString(platform),
             language, manifestHash, $"{AssetsConstants.ManifestName}.unity3d");
 
         AssetsManager assetsManager = new();
@@ -202,7 +202,7 @@ public class GlobalAssetDownloder
         {
             AssetTypeValueField baseField = assetsManager.GetBaseField(assetsFileInstance, assetFileInfo);
 
-            string unpackedManifestBundleFilePath = Path.Combine(_options.ExtractedManifestsPath,
+            string unpackedManifestBundleFilePath = Path.Combine(_downloadOptions.ExtractedManifestsPath,
                 AssetPlatformConverter.ToString(platform), language, $"{baseField["m_Name"].AsString}.bytes");
 
             await using (FileStream sw = File.Open(unpackedManifestBundleFilePath, FileMode.Create, FileAccess.Write))
@@ -222,7 +222,7 @@ public class GlobalAssetDownloder
         SoundManifest sounds;
 
         await using (FileStream bundlesFileStream = new(
-            Path.Combine(_options.ExtractedManifestsPath, platformString, language, "Bundle.bytes"),
+            Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, language, "Bundle.bytes"),
             FileMode.Open, FileAccess.Read))
         {
             using MemoryStream decryptedStream = new();
@@ -232,7 +232,7 @@ public class GlobalAssetDownloder
         }
 
         await using (FileStream moviesFileStream = new(
-            Path.Combine(_options.ExtractedManifestsPath, platformString, language, "Movie.bytes"),
+            Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, language, "Movie.bytes"),
             FileMode.Open, FileAccess.Read))
         {
             using MemoryStream decryptedStream = new();
@@ -242,7 +242,7 @@ public class GlobalAssetDownloder
         }
 
         await using (FileStream soundsFileStream = new(
-            Path.Combine(_options.ExtractedManifestsPath, platformString, language, "Sound.bytes"),
+            Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, language, "Sound.bytes"),
             FileMode.Open, FileAccess.Read))
         {
             using MemoryStream decryptedStream = new();
@@ -260,17 +260,17 @@ public class GlobalAssetDownloder
         string platformString = AssetPlatformConverter.ToString(platform);
 
         await using (StreamWriter sw =
-            new(Path.Combine(_options.ExtractedManifestsPath, $"{platformString}_{language}_Bundle.json"), false))
+            new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Bundle.json"), false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(bundles, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_options.ExtractedManifestsPath, $"{platformString}_{language}_Movie.json"), false))
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Movie.json"), false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(movies, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_options.ExtractedManifestsPath, $"{platformString}_{language}_Sound.json"), false))
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Sound.json"), false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(sounds, Program.IndentedJsonSerializerOptions));
         }
@@ -297,7 +297,7 @@ public class GlobalAssetDownloder
             ])
             .StartAsync(async context =>
             {
-                SemaphoreSlim semaphoreSlim = new(_options.ParallelDownloadsCount);
+                SemaphoreSlim semaphoreSlim = new(_downloadOptions.ParallelDownloadsCount);
                 bool isPausedGlobally = false;
 
                 ProgressTask globalProgressTask = context.AddTask("Global progress", true, allFilesUris.Count);
@@ -322,9 +322,9 @@ public class GlobalAssetDownloder
 
                         await using Stream httpStream = await response.Content.ReadAsStreamAsync();
 
-                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_options.DownloadPath, uri.AbsolutePath[1..]))!);
+                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]))!);
 
-                        await using StreamWriter fileWriter = new(Path.Combine(_options.DownloadPath, uri.AbsolutePath[1..]), false);
+                        await using StreamWriter fileWriter = new(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]), false);
 
                         await httpStream.CopyToWithProgressAsync(fileWriter.BaseStream, response.Content.Headers.ContentLength,
                             progressTask);

@@ -3,7 +3,7 @@ using System.CommandLine.Binding;
 
 namespace Edelstein.Tools.AssetDownloader;
 
-public class CliOptionsBinder : BinderBase<CliOptions>
+public class CliDownloadOptionsBinder : BinderBase<CliDownloadOptions>
 {
     private readonly Option<string?> _assetsHostOption;
     private readonly Option<string?> _apiHostOption;
@@ -17,7 +17,7 @@ public class CliOptionsBinder : BinderBase<CliOptions>
     private readonly Option<bool> _httpOption;
     private readonly Option<string[]> _languagesOption;
 
-    public CliOptionsBinder(Option<string?> assetsHostOption, Option<string?> apiHostOption, Option<DownloadScheme> downloadScheme, Option<string[]> languagesOption,
+    public CliDownloadOptionsBinder(Option<string?> assetsHostOption, Option<string?> apiHostOption, Option<DownloadScheme> downloadScheme, Option<string[]> languagesOption,
         Option<string> extractedManifestsPathOption, Option<string> downloadPathOption,
         Option<int> parallelDownloadsCountOption, Option<bool> noAndroidOption, Option<bool> noIosOption, Option<bool> noJsonManifestOption, Option<bool> httpOption)
     {
@@ -34,7 +34,7 @@ public class CliOptionsBinder : BinderBase<CliOptions>
         _httpOption = httpOption;
     }
 
-    protected override CliOptions GetBoundValue(BindingContext bindingContext) =>
+    protected override CliDownloadOptions GetBoundValue(BindingContext bindingContext) =>
         new()
         {
             AssetsHost = bindingContext.ParseResult.GetValueForOption(_assetsHostOption),

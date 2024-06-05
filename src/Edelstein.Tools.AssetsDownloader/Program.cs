@@ -16,6 +16,16 @@ internal class Program
 
     public static async Task<int> Main(string[] args)
     {
+        Command downloadCommand = ConfigureDownloadCommand();
+        Command restructureCommand = ConfigureRestructureCommand();
+
+        RootCommand rootCommand = [downloadCommand, restructureCommand];
+
+        return await rootCommand.InvokeAsync(args);
+    }
+
+    private static Command ConfigureDownloadCommand()
+    {
         Option<string?> assetsHostOption = new("--assets-host",
             () => null,
             "Host of asset storage");
@@ -50,7 +60,7 @@ internal class Program
             () => false,
             "Use plain HTTP instead of HTTPS");
 
-        RootCommand rootCommand = new("Edelstein assets downloader")
+        Command downloadCommand = new("download", "Edelstein assets downloader")
         {
             assetsHostOption,
             apiHostOption,
@@ -64,28 +74,55 @@ internal class Program
             noJsonManifestOption,
             httpOption
         };
+        downloadCommand.AddAlias("d");
 
-        rootCommand.SetHandler(HandleRootCommandAsync,
-            new CliOptionsBinder(assetsHostOption, apiHostOption, downloadSchemeOption, languagesOption, extractedManifestsPathOption,
+        downloadCommand.SetHandler(DownloadAsync,
+            new CliDownloadOptionsBinder(assetsHostOption, apiHostOption, downloadSchemeOption, languagesOption,
+                extractedManifestsPathOption,
                 downloadPathOption, parallelDownloadsCountOption, noAndroidOption, noIosOption, noJsonManifestOption,
                 httpOption));
 
-        return await rootCommand.InvokeAsync(args);
+        return downloadCommand;
     }
 
-    private static async Task HandleRootCommandAsync(CliOptions options)
+    private static Command ConfigureRestructureCommand()
     {
-        ServicePointManager.DefaultConnectionLimit = options.ParallelDownloadsCount;
+        Option<string> inputOption = new(["--input-dir", "-i"], () => "assets",
+            "Directory with assets files using original directory structure");
+        Option<string> outputOption = new(["--output-dir", "-o"], () => "assets-restructured",
+            "Directory where restructured assets will be located");
+        Option<bool> noSourcenamesOption = new(["--no-sourcenames"], () => false,
+            "Disables generation of .sourcename files that contain information about original file names and locations");
 
-        Directory.CreateDirectory(options.DownloadPath);
-        Directory.CreateDirectory(options.ExtractedManifestsPath);
-        Directory.CreateDirectory(Path.Combine(options.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Android)));
-        Directory.CreateDirectory(Path.Combine(options.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Ios)));
+        Command restructureCommand =
+            new("restructure",
+                "Renames all assets files to human understandable format, combines .ppart and .spart files and recreates directory structure")
+            {
+                inputOption,
+                outputOption,
+                noSourcenamesOption
+            };
+        restructureCommand.AddAlias("r");
 
-        if (options.DownloadScheme is DownloadScheme.Jp)
-            await new JpAssetDownloader(options).DonwloadAssetsAsync();
+        restructureCommand.SetHandler(AssetsRestructurer.RestructureAsync, inputOption, outputOption, noSourcenamesOption);
+
+        return restructureCommand;
+    }
+
+    private static async Task DownloadAsync(CliDownloadOptions downloadOptions)
+    {
+        ServicePointManager.DefaultConnectionLimit = downloadOptions.ParallelDownloadsCount;
+
+        Directory.CreateDirectory(downloadOptions.DownloadPath);
+        Directory.CreateDirectory(downloadOptions.ExtractedManifestsPath);
+        Directory.CreateDirectory(Path.Combine(downloadOptions.ExtractedManifestsPath,
+            AssetPlatformConverter.ToString(AssetPlatform.Android)));
+        Directory.CreateDirectory(Path.Combine(downloadOptions.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Ios)));
+
+        if (downloadOptions.DownloadScheme is DownloadScheme.Jp)
+            await new JpAssetDownloader(downloadOptions).DonwloadAssetsAsync();
         else
-            await new GlobalAssetDownloder(options).DonwloadAssetsAsync();
+            await new GlobalAssetDownloder(downloadOptions).DonwloadAssetsAsync();
 
         AnsiConsole.WriteLine("Press any key to exit...");
         Console.ReadKey();
