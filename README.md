@@ -1,6 +1,6 @@
 # Edelstein.Tools.AssetsDownloader
 
-Edelstein.Tools.AlbumDownloader is a command-line tool to manipulate assets of Love Live SIF2.
+Edelstein.Tools.AssetsDownloader is a command-line tool to manipulate assets of Love Live SIF2.
 
 It can:
 
