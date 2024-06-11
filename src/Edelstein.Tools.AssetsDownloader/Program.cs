@@ -20,7 +20,12 @@ internal class Program
         Command restructureCommand = ConfigureRestructureCommand();
         Command decryptCommand = ConfigureDecryptCommand();
 
-        RootCommand rootCommand = [downloadCommand, restructureCommand, decryptCommand];
+        RootCommand rootCommand = new("Edelstein assets downloader")
+        {
+            downloadCommand,
+            restructureCommand,
+            decryptCommand
+        };
 
         return await rootCommand.InvokeAsync(args);
     }
@@ -61,7 +66,7 @@ internal class Program
             () => false,
             "Use plain HTTP instead of HTTPS");
 
-        Command downloadCommand = new("download", "Edelstein assets downloader")
+        Command downloadCommand = new("download", "Downloads assets")
         {
             assetsHostOption,
             apiHostOption,
