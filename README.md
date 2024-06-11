@@ -27,22 +27,22 @@ Every command have respective `--help`/`-h`/`-?` option to display help about th
 - `download` (`d`) — Downloads assets
   - `--assets-host <assets-host>`                    Host of asset storage []
   - `--api-host <api-host>`                          Host of game's API []
-  - `-s, --download-scheme <Global|Jp>`              Download scheme used by the tool (Global or Jp) [default: Jp]
-  - `-l, --languages <languages>`                    Languages to download for Global scheme [default: EN|ZH|KR]
-  - `-m, --manifests-out-dir <manifests-out-dir>`    Directory where extracted manifest files will be located [default: manifests]
-  - `-o, --output-dir <output-dir>`                  Directory to which assets should be downloaded [default: assets]
-  - `-p, --parallel-downloads <parallel-downloads>`  Count of parallel downloads [default: 10]
-  - `--no-android`                                   Exclude Android assets from download [default: False]
-  - `--no-ios`                                       Exclude iOS assets from download [default: False]
-  - `--no-manifest-json`                             Exclude generating JSON from manifests [default: False]
-  - `--http`                                         Use plain HTTP instead of HTTPS [default: False]
+  - `-s, --download-scheme <Global|Jp>`              Download scheme used by the tool (Global or Jp) [default: `Jp`]
+  - `-l, --languages <languages>`                    Languages to download for Global scheme [default: `EN|ZH|KR`]
+  - `-m, --manifests-out-dir <manifests-out-dir>`    Directory where extracted manifest files will be located [default: `manifests`]
+  - `-o, --output-dir <output-dir>`                  Directory to which assets should be downloaded [default: `assets`]
+  - `-p, --parallel-downloads <parallel-downloads>`  Count of parallel downloads [default: `10`]
+  - `--no-android`                                   Exclude Android assets from download [default: `False`]
+  - `--no-ios`                                       Exclude iOS assets from download [default: `False`]
+  - `--no-manifest-json`                             Exclude generating JSON from manifests [default: `False`]
+  - `--http`                                         Use plain HTTP instead of HTTPS [default: `False`]
 - `restructure` (`r`) — Renames all assets files to human understandable format, combines .ppart and .spart files and recreates directory structure
-  - `-i, --input-dir <input-dir>`    Directory with assets files using original directory structure [default: assets]
-  - `-o, --output-dir <output-dir>`  Directory where restructured assets will be located [default: assets-restructured]
-  - `--no-sourcenames`               Disables generation of .sourcename files that contain information about original file names and locations [default: False]
+  - `-i, --input-dir <input-dir>`    Directory with assets files using original directory structure [default: `assets`]
+  - `-o, --output-dir <output-dir>`  Directory where restructured assets will be located [default: `assets-restructured`]
+  - `--no-sourcenames`               Disables generation of .sourcename files that contain information about original file names and locations [default: `False`]
 - `decrypt` (`c`) — Decrypts sounds and movie files
-  - `-i, --input-dir <input-dir>`    Directory with assets files using restructured directory structure [default: assets-restructured]
-  - `-o, --output-dir <output-dir>`  Directory where decrypted assets will be located [default: assets-decrypted]
+  - `-i, --input-dir <input-dir>`    Directory with assets files using restructured directory structure [default: `assets-restructured`]
+  - `-o, --output-dir <output-dir>`  Directory where decrypted assets will be located [default: `assets-decrypted`]
 
 ## License
 
