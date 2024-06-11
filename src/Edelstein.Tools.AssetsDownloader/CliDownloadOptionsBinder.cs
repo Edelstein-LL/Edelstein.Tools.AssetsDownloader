@@ -17,9 +17,11 @@ public class CliDownloadOptionsBinder : BinderBase<CliDownloadOptions>
     private readonly Option<bool> _httpOption;
     private readonly Option<string[]> _languagesOption;
 
-    public CliDownloadOptionsBinder(Option<string?> assetsHostOption, Option<string?> apiHostOption, Option<DownloadScheme> downloadScheme, Option<string[]> languagesOption,
+    public CliDownloadOptionsBinder(Option<string?> assetsHostOption, Option<string?> apiHostOption, Option<DownloadScheme> downloadScheme,
+        Option<string[]> languagesOption,
         Option<string> extractedManifestsPathOption, Option<string> downloadPathOption,
-        Option<int> parallelDownloadsCountOption, Option<bool> noAndroidOption, Option<bool> noIosOption, Option<bool> noJsonManifestOption, Option<bool> httpOption)
+        Option<int> parallelDownloadsCountOption, Option<bool> noAndroidOption, Option<bool> noIosOption, Option<bool> noJsonManifestOption,
+        Option<bool> httpOption)
     {
         _assetsHostOption = assetsHostOption;
         _apiHostOption = apiHostOption;
@@ -48,6 +50,6 @@ public class CliDownloadOptionsBinder : BinderBase<CliDownloadOptions>
             NoAndroid = bindingContext.ParseResult.GetValueForOption(_noAndroidOption),
             NoIos = bindingContext.ParseResult.GetValueForOption(_noIosOption),
             NoJsonManifest = bindingContext.ParseResult.GetValueForOption(_noJsonManifestOption),
-            Http = bindingContext.ParseResult.GetValueForOption(_httpOption),
+            Http = bindingContext.ParseResult.GetValueForOption(_httpOption)
         };
 }

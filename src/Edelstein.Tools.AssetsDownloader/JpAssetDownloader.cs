@@ -94,7 +94,8 @@ public class JpAssetDownloader
 
             AnsiConsole.WriteLine("Unpacking Android manifest...");
 
-            string manifestBundleFilePath = Path.Combine(_downloadOptions.DownloadPath, AssetPlatformConverter.ToString(AssetPlatform.Android),
+            string manifestBundleFilePath = Path.Combine(_downloadOptions.DownloadPath,
+                AssetPlatformConverter.ToString(AssetPlatform.Android),
                 androidManifestHash!, $"{AssetsConstants.ManifestName}.unity3d");
 
             AssetsManager assetsManager = new();
@@ -218,7 +219,8 @@ public class JpAssetDownloader
         MovieManifest movies;
         SoundManifest sounds;
 
-        await using (FileStream bundlesFileStream = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, "Bundle.bytes"),
+        await using (FileStream bundlesFileStream = new(
+            Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, "Bundle.bytes"),
             FileMode.Open, FileAccess.Read))
         {
             using MemoryStream decryptedStream = new();
@@ -314,9 +316,11 @@ public class JpAssetDownloader
 
                         await using Stream httpStream = await response.Content.ReadAsStreamAsync();
 
-                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]))!);
+                        Directory.CreateDirectory(
+                            Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]))!);
 
-                        await using StreamWriter fileWriter = new(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]), false);
+                        await using StreamWriter fileWriter =
+                            new(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]), false);
 
                         await httpStream.CopyToWithProgressAsync(fileWriter.BaseStream, response.Content.Headers.ContentLength,
                             progressTask);

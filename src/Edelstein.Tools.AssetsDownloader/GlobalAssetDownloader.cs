@@ -88,9 +88,11 @@ public class GlobalAssetDownloder
 
         foreach (string language in _downloadOptions.Languages)
         {
-            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Android),
+            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath,
+                AssetPlatformConverter.ToString(AssetPlatform.Android),
                 language));
-            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Ios),
+            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath,
+                AssetPlatformConverter.ToString(AssetPlatform.Ios),
                 language));
 
             AnsiConsole.WriteLine($"Processing language: {language}");
@@ -265,12 +267,14 @@ public class GlobalAssetDownloder
             await sw.WriteAsync(JsonSerializer.Serialize(bundles, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Movie.json"), false))
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Movie.json"),
+            false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(movies, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Sound.json"), false))
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Sound.json"),
+            false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(sounds, Program.IndentedJsonSerializerOptions));
         }
@@ -322,9 +326,11 @@ public class GlobalAssetDownloder
 
                         await using Stream httpStream = await response.Content.ReadAsStreamAsync();
 
-                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]))!);
+                        Directory.CreateDirectory(
+                            Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]))!);
 
-                        await using StreamWriter fileWriter = new(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]), false);
+                        await using StreamWriter fileWriter =
+                            new(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]), false);
 
                         await httpStream.CopyToWithProgressAsync(fileWriter.BaseStream, response.Content.Headers.ContentLength,
                             progressTask);
