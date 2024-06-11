@@ -9,6 +9,8 @@
         <RootNamespace>Edelstein.Tools.AssetsDownloader</RootNamespace>
         <ServerGarbageCollection>true</ServerGarbageCollection>
         <GarbageCollectionAdaptationMode>1</GarbageCollectionAdaptationMode>
+        <Authors>Arasfon</Authors>
+        <Copyright>Copyright 2024 © Arasfon</Copyright>
     </PropertyGroup>
 
     <ItemGroup>
