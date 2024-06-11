@@ -54,7 +54,8 @@ public class AssetsDecryptor
                 foreach (string filePath in soundsFilePaths)
                 {
                     string relativePath = Path.GetRelativePath(inputDir, filePath);
-                    string fileOutputDir = Path.Combine(outputDir, Path.GetDirectoryName(relativePath)!, Path.GetFileNameWithoutExtension(filePath));
+                    string fileOutputDir = Path.Combine(outputDir, Path.GetDirectoryName(relativePath)!,
+                        Path.GetFileNameWithoutExtension(filePath));
                     Directory.CreateDirectory(fileOutputDir);
 
                     await DecryptSoundsFile(filePath, fileOutputDir);
@@ -83,7 +84,8 @@ public class AssetsDecryptor
                 foreach (string filePath in movieFilePaths)
                 {
                     string relativePath = Path.GetRelativePath(inputDir, filePath);
-                    string fileOutputDir = Path.Combine(outputDir, Path.GetDirectoryName(relativePath)!, Path.GetFileNameWithoutExtension(filePath));
+                    string fileOutputDir = Path.Combine(outputDir, Path.GetDirectoryName(relativePath)!,
+                        Path.GetFileNameWithoutExtension(filePath));
                     Directory.CreateDirectory(fileOutputDir);
 
                     await DecryptMovie(filePath, fileOutputDir);
