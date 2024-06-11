@@ -10,3 +10,6 @@
 [submodule "src/Edelstein.Data.Msts"]
 	path = src/Edelstein.Data.Msts
 	url = ../../Edelstein-LL/Edelstein.Data.Msts
+[submodule "src/Edelstein.Assets.Usm"]
+	path = src/Edelstein.Assets.Usm
+	url = ../../Edelstein-LL/Edelstein.Assets.Usm

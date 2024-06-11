@@ -15,6 +15,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Edelstein.Assets.Management\Edelstein.Assets.Management.csproj"/>
+        <ProjectReference Include="..\Edelstein.Assets.Usm\Edelstein.Assets.Usm.csproj"/>
         <ProjectReference Include="..\Edelstein.Data\Edelstein.Data.csproj"/>
         <ProjectReference Include="..\Edelstein.Security\Edelstein.Security.csproj"/>
     </ItemGroup>

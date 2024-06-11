@@ -18,8 +18,9 @@ internal class Program
     {
         Command downloadCommand = ConfigureDownloadCommand();
         Command restructureCommand = ConfigureRestructureCommand();
+        Command decryptCommand = ConfigureDecryptCommand();
 
-        RootCommand rootCommand = [downloadCommand, restructureCommand];
+        RootCommand rootCommand = [downloadCommand, restructureCommand, decryptCommand];
 
         return await rootCommand.InvokeAsync(args);
     }
@@ -107,6 +108,29 @@ internal class Program
         restructureCommand.SetHandler(AssetsRestructurer.RestructureAsync, inputOption, outputOption, noSourcenamesOption);
 
         return restructureCommand;
+    }
+
+    private static Command ConfigureDecryptCommand()
+    {
+        Option<string> inputOption = new(["--input-dir", "-i"], () => "assets-restructured",
+            "Directory with assets files using restructured directory structure");
+        Option<string> outputOption = new(["--output-dir", "-o"], () => "assets-decrypted",
+            "Directory where decrypted assets will be located");
+
+        Command decryptCommand =
+            new("decrypt",
+                "Decrypts sounds and movie files")
+            {
+                inputOption,
+                outputOption
+            };
+        decryptCommand.AddAlias("c");
+
+        AssetsDecryptor assetsDecryptor = new();
+
+        decryptCommand.SetHandler(assetsDecryptor.DecryptAsync, inputOption, outputOption);
+
+        return decryptCommand;
     }
 
     private static async Task DownloadAsync(CliDownloadOptions downloadOptions)
