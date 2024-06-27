@@ -8,6 +8,7 @@ using Edelstein.Assets.Management.Manifest.Movie;
 using Edelstein.Assets.Management.Manifest.Sound;
 using Edelstein.Data.Transport;
 using Edelstein.Security;
+using Edelstein.Server.Models.Endpoints.Start;
 
 using Spectre.Console;
 
