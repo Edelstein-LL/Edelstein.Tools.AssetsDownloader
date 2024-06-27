@@ -37,12 +37,7 @@ public static class AssetsRestructurer
         await AnsiConsole.Progress()
             .HideCompleted(true)
             .AutoClear(true)
-            .Columns([
-                new TaskDescriptionColumn(),
-                new ProgressBarColumn(),
-                new PercentageColumn(),
-                new SpinnerColumn()
-            ])
+            .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(), new SpinnerColumn())
             .StartAsync(async progressContext =>
             {
                 int totalFileCount = bundleManifest.Entries.Length + soundManifest.Entries.Length + movieManifest.Entries.Length;

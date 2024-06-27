@@ -40,12 +40,7 @@ public class MediaDecryptor
         await AnsiConsole.Progress()
             .HideCompleted(true)
             .AutoClear(true)
-            .Columns([
-                new TaskDescriptionColumn(),
-                new ProgressBarColumn(),
-                new PercentageColumn(),
-                new SpinnerColumn()
-            ])
+            .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(), new SpinnerColumn())
             .StartAsync(async progressContext =>
             {
                 ProgressTask globalTask = progressContext.AddTask($"Sounds progress (0/{soundsFilePaths.Count})", true,
@@ -70,12 +65,7 @@ public class MediaDecryptor
         await AnsiConsole.Progress()
             .HideCompleted(true)
             .AutoClear(true)
-            .Columns([
-                new TaskDescriptionColumn(),
-                new ProgressBarColumn(),
-                new PercentageColumn(),
-                new SpinnerColumn()
-            ])
+            .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(), new SpinnerColumn())
             .StartAsync(async progressContext =>
             {
                 ProgressTask globalTask = progressContext.AddTask($"Movies progress (0/{movieFilePaths.Count})", true,

@@ -293,13 +293,8 @@ public class GlobalAssetDownloder
         await AnsiConsole.Progress()
             .AutoClear(true)
             .HideCompleted(true)
-            .Columns([
-                new TaskDescriptionColumn(),
-                new ProgressBarColumn(),
-                new PercentageColumn(),
-                new RemainingTimeColumn(),
-                new SpinnerColumn()
-            ])
+            .Columns(new TaskDescriptionColumn(), new ProgressBarColumn(), new PercentageColumn(), new RemainingTimeColumn(),
+                new SpinnerColumn())
             .StartAsync(async context =>
             {
                 SemaphoreSlim semaphoreSlim = new(_downloadOptions.ParallelDownloadsCount);
