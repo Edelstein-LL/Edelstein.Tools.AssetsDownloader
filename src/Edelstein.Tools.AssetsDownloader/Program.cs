@@ -131,9 +131,9 @@ internal class Program
             };
         decryptCommand.AddAlias("c");
 
-        AssetsDecryptor assetsDecryptor = new();
+        MediaDecryptor mediaDecryptor = new();
 
-        decryptCommand.SetHandler(assetsDecryptor.DecryptAsync, inputOption, outputOption);
+        decryptCommand.SetHandler(mediaDecryptor.DecryptAsync, inputOption, outputOption);
 
         return decryptCommand;
     }

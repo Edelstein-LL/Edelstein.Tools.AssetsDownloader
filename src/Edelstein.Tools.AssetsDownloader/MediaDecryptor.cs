@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Edelstein.Tools.AssetDownloader;
 
-public class AssetsDecryptor
+public class MediaDecryptor
 {
     private readonly UsmDemuxer _usmDemuxer = new(0x46537c6ceb39d400);
 
