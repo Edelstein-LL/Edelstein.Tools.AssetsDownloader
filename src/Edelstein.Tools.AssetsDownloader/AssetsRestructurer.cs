@@ -20,7 +20,8 @@ public static class AssetsRestructurer
     {
         AnsiConsole.WriteLine("Loading manifests...");
 
-        (BundleManifest bundleManifest, SoundManifest soundManifest, MovieManifest movieManifest) = await LoadManifestsAsync(inputDir.FullName);
+        (BundleManifest bundleManifest, SoundManifest soundManifest, MovieManifest movieManifest) =
+            await LoadManifestsAsync(inputDir.FullName);
 
         AnsiConsole.WriteLine("Manifests loaded!");
 

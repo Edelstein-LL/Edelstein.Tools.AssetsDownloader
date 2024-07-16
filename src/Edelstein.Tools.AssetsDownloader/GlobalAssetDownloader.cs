@@ -186,8 +186,10 @@ public class GlobalAssetDownloder
             new($"{_assetsBaseUrl}/{platformString}/{language}/{manifestHash}/{AssetsConstants.ManifestName}.unity3d");
 
         await using Stream httpStream = await _httpClient.GetStreamAsync(downloadUri);
-        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadDirectory.FullName, downloadUri.AbsolutePath[1..]))!);
-        await using StreamWriter fileWriter = new(Path.Combine(_downloadOptions.DownloadDirectory.FullName, downloadUri.AbsolutePath[1..]), false);
+        Directory.CreateDirectory(
+            Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadDirectory.FullName, downloadUri.AbsolutePath[1..]))!);
+        await using StreamWriter fileWriter =
+            new(Path.Combine(_downloadOptions.DownloadDirectory.FullName, downloadUri.AbsolutePath[1..]), false);
         await httpStream.CopyToAsync(fileWriter.BaseStream);
     }
 
@@ -268,13 +270,15 @@ public class GlobalAssetDownloder
             await sw.WriteAsync(JsonSerializer.Serialize(bundles, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, $"{platformString}_{language}_Movie.json"),
+        await using (StreamWriter sw = new(
+            Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, $"{platformString}_{language}_Movie.json"),
             false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(movies, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, $"{platformString}_{language}_Sound.json"),
+        await using (StreamWriter sw = new(
+            Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, $"{platformString}_{language}_Sound.json"),
             false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(sounds, Program.IndentedJsonSerializerOptions));
@@ -322,8 +326,8 @@ public class GlobalAssetDownloder
 
                         await using Stream httpStream = await response.Content.ReadAsStreamAsync();
 
-                        Directory.CreateDirectory(
-                            Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadDirectory.FullName, uri.AbsolutePath[1..]))!);
+                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadDirectory.FullName,
+                            uri.AbsolutePath[1..]))!);
 
                         await using StreamWriter fileWriter =
                             new(Path.Combine(_downloadOptions.DownloadDirectory.FullName, uri.AbsolutePath[1..]), false);
