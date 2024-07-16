@@ -10,9 +10,9 @@ public class MediaDecryptor
 {
     private readonly UsmDemuxer _usmDemuxer = new(0x46537c6ceb39d400);
 
-    public async Task DecryptAsync(string inputDir, string outputDir)
+    public async Task DecryptAsync(DirectoryInfo inputDir, DirectoryInfo outputDir)
     {
-        Directory.CreateDirectory(outputDir);
+        outputDir.Create();
 
         if (!await IsVgmstreamAvailable())
         {
@@ -31,11 +31,11 @@ public class MediaDecryptor
 
         AnsiConsole.Write("Starting decryption...");
 
-        List<string> soundsFilePaths = Directory.EnumerateFiles(inputDir, "*.acb", SearchOption.AllDirectories)
-            .Concat(Directory.EnumerateFiles(inputDir, "*.awb", SearchOption.AllDirectories))
+        List<string> soundsFilePaths = Directory.EnumerateFiles(inputDir.FullName, "*.acb", SearchOption.AllDirectories)
+            .Concat(Directory.EnumerateFiles(inputDir.FullName, "*.awb", SearchOption.AllDirectories))
             .ToList();
 
-        List<string> movieFilePaths = Directory.EnumerateFiles(inputDir, "*.usm", SearchOption.AllDirectories).ToList();
+        List<string> movieFilePaths = Directory.EnumerateFiles(inputDir.FullName, "*.usm", SearchOption.AllDirectories).ToList();
 
         await AnsiConsole.Progress()
             .HideCompleted(true)
@@ -48,8 +48,8 @@ public class MediaDecryptor
 
                 foreach (string filePath in soundsFilePaths)
                 {
-                    string relativePath = Path.GetRelativePath(inputDir, filePath);
-                    string fileOutputDir = Path.Combine(outputDir, Path.GetDirectoryName(relativePath)!,
+                    string relativePath = Path.GetRelativePath(inputDir.FullName, filePath);
+                    string fileOutputDir = Path.Combine(outputDir.FullName, Path.GetDirectoryName(relativePath)!,
                         Path.GetFileNameWithoutExtension(filePath));
                     Directory.CreateDirectory(fileOutputDir);
 
@@ -73,8 +73,8 @@ public class MediaDecryptor
 
                 foreach (string filePath in movieFilePaths)
                 {
-                    string relativePath = Path.GetRelativePath(inputDir, filePath);
-                    string fileOutputDir = Path.Combine(outputDir, Path.GetDirectoryName(relativePath)!,
+                    string relativePath = Path.GetRelativePath(inputDir.FullName, filePath);
+                    string fileOutputDir = Path.Combine(outputDir.FullName, Path.GetDirectoryName(relativePath)!,
                         Path.GetFileNameWithoutExtension(filePath));
                     Directory.CreateDirectory(fileOutputDir);
 

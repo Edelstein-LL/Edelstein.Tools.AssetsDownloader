@@ -8,8 +8,8 @@ public class CliDownloadOptionsBinder : BinderBase<CliDownloadOptions>
     private readonly Option<string?> _assetsHostOption;
     private readonly Option<string?> _apiHostOption;
     private readonly Option<DownloadScheme> _downloadScheme;
-    private readonly Option<string> _extractedManifestsPathOption;
-    private readonly Option<string> _downloadPathOption;
+    private readonly Option<DirectoryInfo> _extractedManifestsDirOption;
+    private readonly Option<DirectoryInfo> _downloadDirOption;
     private readonly Option<int> _parallelDownloadsCountOption;
     private readonly Option<bool> _noAndroidOption;
     private readonly Option<bool> _noIosOption;
@@ -19,7 +19,7 @@ public class CliDownloadOptionsBinder : BinderBase<CliDownloadOptions>
 
     public CliDownloadOptionsBinder(Option<string?> assetsHostOption, Option<string?> apiHostOption, Option<DownloadScheme> downloadScheme,
         Option<string[]> languagesOption,
-        Option<string> extractedManifestsPathOption, Option<string> downloadPathOption,
+        Option<DirectoryInfo> extractedManifestsDirOption, Option<DirectoryInfo> downloadDirOption,
         Option<int> parallelDownloadsCountOption, Option<bool> noAndroidOption, Option<bool> noIosOption, Option<bool> noJsonManifestOption,
         Option<bool> httpOption)
     {
@@ -27,8 +27,8 @@ public class CliDownloadOptionsBinder : BinderBase<CliDownloadOptions>
         _apiHostOption = apiHostOption;
         _downloadScheme = downloadScheme;
         _languagesOption = languagesOption;
-        _extractedManifestsPathOption = extractedManifestsPathOption;
-        _downloadPathOption = downloadPathOption;
+        _extractedManifestsDirOption = extractedManifestsDirOption;
+        _downloadDirOption = downloadDirOption;
         _parallelDownloadsCountOption = parallelDownloadsCountOption;
         _noAndroidOption = noAndroidOption;
         _noIosOption = noIosOption;
@@ -43,9 +43,9 @@ public class CliDownloadOptionsBinder : BinderBase<CliDownloadOptions>
             ApiHost = bindingContext.ParseResult.GetValueForOption(_apiHostOption),
             DownloadScheme = bindingContext.ParseResult.GetValueForOption(_downloadScheme),
             Languages = bindingContext.ParseResult.GetValueForOption(_languagesOption) ?? throw new InvalidOperationException(),
-            ExtractedManifestsPath =
-                bindingContext.ParseResult.GetValueForOption(_extractedManifestsPathOption) ?? throw new InvalidOperationException(),
-            DownloadPath = bindingContext.ParseResult.GetValueForOption(_downloadPathOption) ?? throw new InvalidOperationException(),
+            ExtractedManifestsDirectory =
+                bindingContext.ParseResult.GetValueForOption(_extractedManifestsDirOption) ?? throw new InvalidOperationException(),
+            DownloadDirectory = bindingContext.ParseResult.GetValueForOption(_downloadDirOption) ?? throw new InvalidOperationException(),
             ParallelDownloadsCount = bindingContext.ParseResult.GetValueForOption(_parallelDownloadsCountOption),
             NoAndroid = bindingContext.ParseResult.GetValueForOption(_noAndroidOption),
             NoIos = bindingContext.ParseResult.GetValueForOption(_noIosOption),

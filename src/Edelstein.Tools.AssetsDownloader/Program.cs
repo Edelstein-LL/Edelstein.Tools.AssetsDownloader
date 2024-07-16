@@ -44,11 +44,11 @@ internal class Program
         Option<string[]> languagesOption = new(["--languages", "-l"],
             () => ["EN", "ZH", "KR"],
             "Languages to download for Global scheme");
-        Option<string> extractedManifestsPathOption = new(["--manifests-out-dir", "-m"],
-            () => "manifests",
+        Option<DirectoryInfo> extractedManifestsDirOption = new(["--manifests-out-dir", "-m"],
+            () => new DirectoryInfo("manifests"),
             "Directory where extracted manifest files will be located");
-        Option<string> downloadPathOption = new(["--output-dir", "-o"],
-            () => "assets",
+        Option<DirectoryInfo> downloadDirOption = new(["--output-dir", "-o"],
+            () => new DirectoryInfo("assets"),
             "Directory to which assets should be downloaded");
         Option<int> parallelDownloadsCountOption = new(["--parallel-downloads", "-p"],
             () => 10,
@@ -72,8 +72,8 @@ internal class Program
             apiHostOption,
             downloadSchemeOption,
             languagesOption,
-            extractedManifestsPathOption,
-            downloadPathOption,
+            extractedManifestsDirOption,
+            downloadDirOption,
             parallelDownloadsCountOption,
             noAndroidOption,
             noIosOption,
@@ -84,18 +84,17 @@ internal class Program
 
         downloadCommand.SetHandler(DownloadAsync,
             new CliDownloadOptionsBinder(assetsHostOption, apiHostOption, downloadSchemeOption, languagesOption,
-                extractedManifestsPathOption,
-                downloadPathOption, parallelDownloadsCountOption, noAndroidOption, noIosOption, noJsonManifestOption,
-                httpOption));
+                extractedManifestsDirOption, downloadDirOption, parallelDownloadsCountOption, noAndroidOption, noIosOption,
+                noJsonManifestOption, httpOption));
 
         return downloadCommand;
     }
 
     private static Command ConfigureRestructureCommand()
     {
-        Option<string> inputOption = new(["--input-dir", "-i"], () => "assets",
+        Option<DirectoryInfo> inputDirOption = new(["--input-dir", "-i"], () => new DirectoryInfo("assets"),
             "Directory with assets files using original directory structure");
-        Option<string> outputOption = new(["--output-dir", "-o"], () => "assets-restructured",
+        Option<DirectoryInfo> outputDirOption = new(["--output-dir", "-o"], () => new DirectoryInfo("assets-restructured"),
             "Directory where restructured assets will be located");
         Option<bool> noSourcenamesOption = new(["--no-sourcenames"], () => false,
             "Disables generation of .sourcename files that contain information about original file names and locations");
@@ -104,36 +103,36 @@ internal class Program
             new("restructure",
                 "Renames all assets files to human understandable format, combines .ppart and .spart files and recreates directory structure")
             {
-                inputOption,
-                outputOption,
+                inputDirOption,
+                outputDirOption,
                 noSourcenamesOption
             };
         restructureCommand.AddAlias("r");
 
-        restructureCommand.SetHandler(AssetsRestructurer.RestructureAsync, inputOption, outputOption, noSourcenamesOption);
+        restructureCommand.SetHandler(AssetsRestructurer.RestructureAsync, inputDirOption, outputDirOption, noSourcenamesOption);
 
         return restructureCommand;
     }
 
     private static Command ConfigureDecryptCommand()
     {
-        Option<string> inputOption = new(["--input-dir", "-i"], () => "assets-restructured",
+        Option<DirectoryInfo> inputDirOption = new(["--input-dir", "-i"], () => new DirectoryInfo("assets-restructured"),
             "Directory with assets files using restructured directory structure");
-        Option<string> outputOption = new(["--output-dir", "-o"], () => "assets-decrypted",
+        Option<DirectoryInfo> outputDirOption = new(["--output-dir", "-o"], () => new DirectoryInfo("assets-decrypted"),
             "Directory where decrypted assets will be located");
 
         Command decryptCommand =
             new("decrypt",
                 "Decrypts sounds and movie files")
             {
-                inputOption,
-                outputOption
+                inputDirOption,
+                outputDirOption
             };
         decryptCommand.AddAlias("c");
 
         MediaDecryptor mediaDecryptor = new();
 
-        decryptCommand.SetHandler(mediaDecryptor.DecryptAsync, inputOption, outputOption);
+        decryptCommand.SetHandler(mediaDecryptor.DecryptAsync, inputDirOption, outputDirOption);
 
         return decryptCommand;
     }
@@ -142,11 +141,10 @@ internal class Program
     {
         ServicePointManager.DefaultConnectionLimit = downloadOptions.ParallelDownloadsCount;
 
-        Directory.CreateDirectory(downloadOptions.DownloadPath);
-        Directory.CreateDirectory(downloadOptions.ExtractedManifestsPath);
-        Directory.CreateDirectory(Path.Combine(downloadOptions.ExtractedManifestsPath,
-            AssetPlatformConverter.ToString(AssetPlatform.Android)));
-        Directory.CreateDirectory(Path.Combine(downloadOptions.ExtractedManifestsPath, AssetPlatformConverter.ToString(AssetPlatform.Ios)));
+        downloadOptions.DownloadDirectory.Create();
+        downloadOptions.ExtractedManifestsDirectory.Create();
+        downloadOptions.ExtractedManifestsDirectory.CreateSubdirectory(AssetPlatformConverter.ToString(AssetPlatform.Android));
+        downloadOptions.ExtractedManifestsDirectory.CreateSubdirectory(AssetPlatformConverter.ToString(AssetPlatform.Ios));
 
         if (downloadOptions.DownloadScheme is DownloadScheme.Jp)
             await new JpAssetDownloader(downloadOptions).DonwloadAssetsAsync();

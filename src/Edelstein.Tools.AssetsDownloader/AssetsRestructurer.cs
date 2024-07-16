@@ -16,21 +16,18 @@ namespace Edelstein.Tools.AssetDownloader;
 
 public static class AssetsRestructurer
 {
-    public static async Task RestructureAsync(string inputDir, string outputDir, bool noSourcenames = false)
+    public static async Task RestructureAsync(DirectoryInfo inputDir, DirectoryInfo outputDir, bool noSourcenames = false)
     {
         AnsiConsole.WriteLine("Loading manifests...");
 
-        (BundleManifest bundleManifest, SoundManifest soundManifest, MovieManifest movieManifest) = await LoadManifestsAsync(inputDir);
+        (BundleManifest bundleManifest, SoundManifest soundManifest, MovieManifest movieManifest) = await LoadManifestsAsync(inputDir.FullName);
 
         AnsiConsole.WriteLine("Manifests loaded!");
 
-        string bundlesOutputPath = Path.Combine(outputDir, "Bundles");
-        string soundsOutputPath = Path.Combine(outputDir, "Sounds");
-        string moviesOutputPath = Path.Combine(outputDir, "Movies");
-
-        Directory.CreateDirectory(bundlesOutputPath);
-        Directory.CreateDirectory(soundsOutputPath);
-        Directory.CreateDirectory(moviesOutputPath);
+        outputDir.Create();
+        string bundlesOutputPath = outputDir.CreateSubdirectory("Bundles").FullName;
+        string soundsOutputPath = outputDir.CreateSubdirectory("Sounds").FullName;
+        string moviesOutputPath = outputDir.CreateSubdirectory("Movies").FullName;
 
         AnsiConsole.WriteLine("Starting restructuring...");
 
@@ -46,7 +43,7 @@ public static class AssetsRestructurer
 
                 foreach (BundleManifestEntry manifestEntry in bundleManifest.Entries)
                 {
-                    string originalFilePath = Path.Combine(inputDir, manifestEntry.Hash, $"{manifestEntry.Name}.unity3d");
+                    string originalFilePath = Path.Combine(inputDir.FullName, manifestEntry.Hash, $"{manifestEntry.Name}.unity3d");
                     string targetFilePath = Path.Combine([bundlesOutputPath, ..manifestEntry.Identifier.Split("/")]) + ".unity3d";
 
                     Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath)!);
@@ -62,9 +59,9 @@ public static class AssetsRestructurer
 
                 foreach (SoundManifestEntry manifestEntry in soundManifest.Entries)
                 {
-                    string acbOriginalFilePath = Path.Combine(inputDir, manifestEntry.Hash, $"{manifestEntry.Name}.acb");
+                    string acbOriginalFilePath = Path.Combine(inputDir.FullName, manifestEntry.Hash, $"{manifestEntry.Name}.acb");
                     string acbTargetFilePath = Path.Combine([soundsOutputPath, ..manifestEntry.Identifier.Split("/")]) + ".acb";
-                    string awbOriginalFilePath = Path.Combine(inputDir, manifestEntry.Hash, $"{manifestEntry.Name}.awb");
+                    string awbOriginalFilePath = Path.Combine(inputDir.FullName, manifestEntry.Hash, $"{manifestEntry.Name}.awb");
                     string awbTargetFilePath = Path.Combine([soundsOutputPath, ..manifestEntry.Identifier.Split("/")]) + ".awb";
 
                     Directory.CreateDirectory(Path.GetDirectoryName(acbTargetFilePath)!);
@@ -111,7 +108,7 @@ public static class AssetsRestructurer
 
                 foreach (MovieManifestEntry manifestEntry in movieManifest.Entries)
                 {
-                    string originalFilePath = Path.Combine(inputDir, manifestEntry.Hash, $"{manifestEntry.Name}.usm");
+                    string originalFilePath = Path.Combine(inputDir.FullName, manifestEntry.Hash, $"{manifestEntry.Name}.usm");
                     string targetFilePath = Path.Combine([moviesOutputPath, ..manifestEntry.Identifier.Split("/")]) + ".usm";
 
                     Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath)!);

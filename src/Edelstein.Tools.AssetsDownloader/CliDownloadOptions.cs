@@ -6,8 +6,8 @@ public class CliDownloadOptions
     public string? ApiHost { get; set; }
     public DownloadScheme DownloadScheme { get; set; }
     public required string[] Languages { get; set; }
-    public required string ExtractedManifestsPath { get; set; }
-    public required string DownloadPath { get; set; }
+    public required DirectoryInfo ExtractedManifestsDirectory { get; set; }
+    public required DirectoryInfo DownloadDirectory { get; set; }
     public int ParallelDownloadsCount { get; set; }
     public bool NoAndroid { get; set; }
     public bool NoIos { get; set; }

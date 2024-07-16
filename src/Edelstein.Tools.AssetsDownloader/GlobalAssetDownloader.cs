@@ -66,7 +66,7 @@ public class GlobalAssetDownloder
         if (!_downloadOptions.NoIos)
             iosManifestHash = await RetrieveManifestHashAsync(AssetPlatform.Ios);
 
-        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, "hashes.txt"),
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, "hashes.txt"),
             new FileStreamOptions
             {
                 Mode = FileMode.Create,
@@ -89,10 +89,10 @@ public class GlobalAssetDownloder
 
         foreach (string language in _downloadOptions.Languages)
         {
-            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath,
+            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName,
                 AssetPlatformConverter.ToString(AssetPlatform.Android),
                 language));
-            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsPath,
+            Directory.CreateDirectory(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName,
                 AssetPlatformConverter.ToString(AssetPlatform.Ios),
                 language));
 
@@ -186,14 +186,14 @@ public class GlobalAssetDownloder
             new($"{_assetsBaseUrl}/{platformString}/{language}/{manifestHash}/{AssetsConstants.ManifestName}.unity3d");
 
         await using Stream httpStream = await _httpClient.GetStreamAsync(downloadUri);
-        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, downloadUri.AbsolutePath[1..]))!);
-        await using StreamWriter fileWriter = new(Path.Combine(_downloadOptions.DownloadPath, downloadUri.AbsolutePath[1..]), false);
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadDirectory.FullName, downloadUri.AbsolutePath[1..]))!);
+        await using StreamWriter fileWriter = new(Path.Combine(_downloadOptions.DownloadDirectory.FullName, downloadUri.AbsolutePath[1..]), false);
         await httpStream.CopyToAsync(fileWriter.BaseStream);
     }
 
     private async Task UnpackManifestAsync(AssetPlatform platform, string language, string manifestHash)
     {
-        string manifestBundleFilePath = Path.Combine(_downloadOptions.DownloadPath, AssetPlatformConverter.ToString(platform),
+        string manifestBundleFilePath = Path.Combine(_downloadOptions.DownloadDirectory.FullName, AssetPlatformConverter.ToString(platform),
             language, manifestHash, $"{AssetsConstants.ManifestName}.unity3d");
 
         AssetsManager assetsManager = new();
@@ -205,7 +205,7 @@ public class GlobalAssetDownloder
         {
             AssetTypeValueField baseField = assetsManager.GetBaseField(assetsFileInstance, assetFileInfo);
 
-            string unpackedManifestBundleFilePath = Path.Combine(_downloadOptions.ExtractedManifestsPath,
+            string unpackedManifestBundleFilePath = Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName,
                 AssetPlatformConverter.ToString(platform), language, $"{baseField["m_Name"].AsString}.bytes");
 
             await using (FileStream sw = File.Open(unpackedManifestBundleFilePath, FileMode.Create, FileAccess.Write))
@@ -225,7 +225,7 @@ public class GlobalAssetDownloder
         SoundManifest sounds;
 
         await using (FileStream bundlesFileStream = new(
-            Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, language, "Bundle.bytes"),
+            Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, platformString, language, "Bundle.bytes"),
             FileMode.Open, FileAccess.Read))
         {
             using MemoryStream decryptedStream = new();
@@ -235,7 +235,7 @@ public class GlobalAssetDownloder
         }
 
         await using (FileStream moviesFileStream = new(
-            Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, language, "Movie.bytes"),
+            Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, platformString, language, "Movie.bytes"),
             FileMode.Open, FileAccess.Read))
         {
             using MemoryStream decryptedStream = new();
@@ -245,7 +245,7 @@ public class GlobalAssetDownloder
         }
 
         await using (FileStream soundsFileStream = new(
-            Path.Combine(_downloadOptions.ExtractedManifestsPath, platformString, language, "Sound.bytes"),
+            Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, platformString, language, "Sound.bytes"),
             FileMode.Open, FileAccess.Read))
         {
             using MemoryStream decryptedStream = new();
@@ -263,18 +263,18 @@ public class GlobalAssetDownloder
         string platformString = AssetPlatformConverter.ToString(platform);
 
         await using (StreamWriter sw =
-            new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Bundle.json"), false))
+            new(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, $"{platformString}_{language}_Bundle.json"), false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(bundles, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Movie.json"),
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, $"{platformString}_{language}_Movie.json"),
             false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(movies, Program.IndentedJsonSerializerOptions));
         }
 
-        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsPath, $"{platformString}_{language}_Sound.json"),
+        await using (StreamWriter sw = new(Path.Combine(_downloadOptions.ExtractedManifestsDirectory.FullName, $"{platformString}_{language}_Sound.json"),
             false))
         {
             await sw.WriteAsync(JsonSerializer.Serialize(sounds, Program.IndentedJsonSerializerOptions));
@@ -323,10 +323,10 @@ public class GlobalAssetDownloder
                         await using Stream httpStream = await response.Content.ReadAsStreamAsync();
 
                         Directory.CreateDirectory(
-                            Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]))!);
+                            Path.GetDirectoryName(Path.Combine(_downloadOptions.DownloadDirectory.FullName, uri.AbsolutePath[1..]))!);
 
                         await using StreamWriter fileWriter =
-                            new(Path.Combine(_downloadOptions.DownloadPath, uri.AbsolutePath[1..]), false);
+                            new(Path.Combine(_downloadOptions.DownloadDirectory.FullName, uri.AbsolutePath[1..]), false);
 
                         await httpStream.CopyToWithProgressAsync(fileWriter.BaseStream, response.Content.Headers.ContentLength,
                             progressTask);
