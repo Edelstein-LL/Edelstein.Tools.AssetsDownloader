@@ -10,7 +10,7 @@ public class MediaDecryptor
 {
     private readonly UsmDemuxer _usmDemuxer = new(0x46537c6ceb39d400);
 
-    public async Task DecryptAsync(DirectoryInfo inputDir, DirectoryInfo outputDir)
+    public async Task<int> DecryptAsync(DirectoryInfo inputDir, DirectoryInfo outputDir)
     {
         outputDir.Create();
 
@@ -19,7 +19,7 @@ public class MediaDecryptor
             AnsiConsole.MarkupLine("vgmstream-cli has not been found! " +
                 "Have you downloaded it and extracted to program's location? " +
                 "Download vgmstream-cli: [link]https://github.com/vgmstream/vgmstream/releases/latest[/]");
-            return;
+            return 1;
         }
 
         if (!await IsFFmpegAvailable())
@@ -27,6 +27,7 @@ public class MediaDecryptor
             AnsiConsole.MarkupLine("ffmpeg has not been found! " +
                 "Have you installed it? " +
                 "Download ffmpeg: [link]https://ffmpeg.org/download.html[/]");
+            return 1;
         }
 
         AnsiConsole.Write("Starting decryption...");
@@ -90,6 +91,8 @@ public class MediaDecryptor
         AnsiConsole.WriteLine("Success!");
         AnsiConsole.WriteLine("Press any key to exit...");
         Console.ReadKey();
+
+        return 0;
     }
 
     private static async Task<bool> IsVgmstreamAvailable()
