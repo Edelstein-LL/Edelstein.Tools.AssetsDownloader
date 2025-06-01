@@ -10,7 +10,7 @@ It can:
 
 ## Install
 
-This program requires the [.NET 8.0 runtime](https://dot.net/download) to run and optionally [vgmstream-cli](https://github.com/vgmstream/vgmstream/releases/latest) and [FFmpeg](https://ffmpeg.org/download.html).
+This program requires the [.NET 9.0 runtime](https://dot.net/download) to run and optionally [vgmstream-cli](https://github.com/vgmstream/vgmstream/releases/latest) and [FFmpeg](https://ffmpeg.org/download.html).
 
 Download respective [latest release](https://github.com/Edelstein-LL/Edelstein.Tools.AssetsDownloader/releases/latest) executable for your OS and architecture.
 

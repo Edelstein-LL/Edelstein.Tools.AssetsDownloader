@@ -139,8 +139,6 @@ internal class Program
 
     private static async Task DownloadAsync(CliDownloadOptions downloadOptions)
     {
-        ServicePointManager.DefaultConnectionLimit = downloadOptions.ParallelDownloadsCount;
-
         downloadOptions.DownloadDirectory.Create();
         downloadOptions.ExtractedManifestsDirectory.Create();
         downloadOptions.ExtractedManifestsDirectory.CreateSubdirectory(AssetPlatformConverter.ToString(AssetPlatform.Android));

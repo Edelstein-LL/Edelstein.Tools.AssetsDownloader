@@ -19,7 +19,7 @@ namespace Edelstein.Tools.AssetDownloader;
 
 public class JpAssetDownloader
 {
-    private readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient;
     private readonly CliDownloadOptions _downloadOptions;
 
     private const string DefaultAssetsHost = "lovelive-schoolidolfestival2-assets.akamaized.net";
@@ -31,6 +31,8 @@ public class JpAssetDownloader
     public JpAssetDownloader(CliDownloadOptions downloadOptions)
     {
         _downloadOptions = downloadOptions;
+
+        _httpClient = new HttpClient(new SocketsHttpHandler { MaxConnectionsPerServer = _downloadOptions.ParallelDownloadsCount });
 
         if (_downloadOptions.Http)
         {

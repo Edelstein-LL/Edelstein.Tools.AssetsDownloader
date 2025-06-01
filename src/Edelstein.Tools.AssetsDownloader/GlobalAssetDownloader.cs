@@ -19,7 +19,7 @@ namespace Edelstein.Tools.AssetDownloader;
 
 public class GlobalAssetDownloder
 {
-    private readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient;
     private readonly CliDownloadOptions _downloadOptions;
 
     private const string DefaultAssetsHost = "img-sif2.lovelive-sif2.com";
@@ -31,6 +31,8 @@ public class GlobalAssetDownloder
     public GlobalAssetDownloder(CliDownloadOptions downloadOptions)
     {
         _downloadOptions = downloadOptions;
+
+        _httpClient = new HttpClient(new SocketsHttpHandler { MaxConnectionsPerServer = _downloadOptions.ParallelDownloadsCount });
 
         if (_downloadOptions.Http)
         {
