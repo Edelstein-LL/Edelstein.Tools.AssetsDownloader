@@ -25,12 +25,17 @@ public class JpAssetDownloader
     private const string DefaultAssetsHost = "lovelive-schoolidolfestival2-assets.akamaized.net";
     private const string DefaultApiHost = "api.app.lovelive-sif2.bushimo.jp";
 
+    private readonly string _assetVersion = "4c921d2443335e574a82e04ec9ea243c";
+
     private readonly string _assetsBaseUrl;
     private readonly string _apiBaseUrl;
 
     public JpAssetDownloader(CliDownloadOptions downloadOptions)
     {
         _downloadOptions = downloadOptions;
+
+        if (_downloadOptions.AssetVersion is not null)
+            _assetVersion = _downloadOptions.AssetVersion;
 
         _httpClient = new HttpClient(new SocketsHttpHandler { MaxConnectionsPerServer = _downloadOptions.ParallelDownloadsCount });
 
@@ -184,13 +189,14 @@ public class JpAssetDownloader
 
         string clientData = await PayloadCryptor.EncryptAsync(JsonSerializer.Serialize(new
         {
-            asset_version = "0",
+            asset_version = _assetVersion,
             environment = "release"
         }));
 
         using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{_apiBaseUrl}/api/start/assetHash");
 
         httpRequestMessage.Headers.Add("Aoharu-Platform", platformString);
+        httpRequestMessage.Headers.Add("Aoharu-Asset-Version", _assetVersion);
 
         httpRequestMessage.Content = new StringContent(clientData, MediaTypeHeaderValue.Parse("application/json"));
 

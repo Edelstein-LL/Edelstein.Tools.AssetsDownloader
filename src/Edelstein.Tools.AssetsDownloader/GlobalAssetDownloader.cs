@@ -25,12 +25,17 @@ public class GlobalAssetDownloder
     private const string DefaultAssetsHost = "img-sif2.lovelive-sif2.com";
     private const string DefaultApiHost = "api-sif2.lovelive-sif2.com";
 
+    private readonly string _assetVersion = "5260ff15dff8ba0c00ad91400f515f55";
+
     private readonly string _assetsBaseUrl;
     private readonly string _apiBaseUrl;
 
     public GlobalAssetDownloder(CliDownloadOptions downloadOptions)
     {
         _downloadOptions = downloadOptions;
+
+        if (_downloadOptions.AssetVersion is not null)
+            _assetVersion = _downloadOptions.AssetVersion;
 
         _httpClient = new HttpClient(new SocketsHttpHandler { MaxConnectionsPerServer = _downloadOptions.ParallelDownloadsCount });
 
@@ -162,13 +167,14 @@ public class GlobalAssetDownloder
 
         string clientData = await PayloadCryptor.EncryptAsync(JsonSerializer.Serialize(new
         {
-            asset_version = "0",
+            asset_version = _assetVersion,
             environment = "release"
         }));
 
         using HttpRequestMessage httpRequestMessage = new(HttpMethod.Post, $"{_apiBaseUrl}/api/start/assetHash");
 
         httpRequestMessage.Headers.Add("Aoharu-Platform", platformString);
+        httpRequestMessage.Headers.Add("Aoharu-Asset-Version", _assetVersion);
 
         httpRequestMessage.Content = new StringContent(clientData, MediaTypeHeaderValue.Parse("application/json"));
 

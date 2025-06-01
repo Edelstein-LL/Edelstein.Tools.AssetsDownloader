@@ -38,6 +38,9 @@ internal class Program
         Option<string?> apiHostOption = new("--api-host",
             () => null,
             "Host of game's API");
+        Option<string?> assetVersionOption = new("--asset-version",
+            () => null,
+            "Asset version to use in requests to the API (only ew requires it)");
         Option<DownloadScheme> downloadSchemeOption = new(["--download-scheme", "-s"],
             () => DownloadScheme.Jp,
             "Download scheme used by the tool (Global or Jp)");
@@ -70,6 +73,7 @@ internal class Program
         {
             assetsHostOption,
             apiHostOption,
+            assetVersionOption,
             downloadSchemeOption,
             languagesOption,
             extractedManifestsDirOption,
@@ -83,7 +87,7 @@ internal class Program
         downloadCommand.AddAlias("d");
 
         downloadCommand.SetHandler(DownloadAsync,
-            new CliDownloadOptionsBinder(assetsHostOption, apiHostOption, downloadSchemeOption, languagesOption,
+            new CliDownloadOptionsBinder(assetsHostOption, apiHostOption, assetVersionOption, downloadSchemeOption, languagesOption,
                 extractedManifestsDirOption, downloadDirOption, parallelDownloadsCountOption, noAndroidOption, noIosOption,
                 noJsonManifestOption, httpOption));
 

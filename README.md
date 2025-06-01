@@ -27,6 +27,7 @@ Every command have respective `--help`/`-h`/`-?` option to display help about th
 - `download` (`d`) — Downloads assets
   - `--assets-host <assets-host>`                    Host of asset storage []
   - `--api-host <api-host>`                          Host of game's API []
+  - `--asset-version <asset-version>`                Asset version to use in requests to the API (only ew requires it) []
   - `-s, --download-scheme <Global|Jp>`              Download scheme used by the tool (Global or Jp) [default: `Jp`]
   - `-l, --languages <languages>`                    Languages to download for Global scheme [default: `EN|ZH|KR`]
   - `-m, --manifests-out-dir <manifests-out-dir>`    Directory where extracted manifest files will be located [default: `manifests`]
