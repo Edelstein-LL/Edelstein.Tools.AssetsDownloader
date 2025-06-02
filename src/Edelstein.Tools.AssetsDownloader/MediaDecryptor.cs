@@ -158,7 +158,7 @@ public class MediaDecryptor
         ProcessStartInfo psi = new()
         {
             FileName = "vgmstream-cli",
-            Arguments = $"\"{inputFilePath}\" -o \"{Path.Combine(outputDir, "?n.wav")}\" -S 0",
+            Arguments = $"-o \"{Path.Combine(outputDir, "?n.wav")}\" -S 0 \"{inputFilePath}\"",
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
